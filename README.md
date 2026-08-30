@@ -148,17 +148,7 @@ findings of value.
 
 ## Citing
 
-```bibtex
-@misc{llmersion2026,
-  title  = {LLMersion: An AI Agent Solution for Education, Ultra-Low-Cost
-            Home Language Acquisition toward Educational Equity, Grounded
-            in a Survey of Needs, Costs, and Hardware},
-  author = {TODO},
-  year   = {2026},
-  note   = {arXiv: TODO}
-}
-```
-
+Citation information will be added once the paper is posted to arXiv.
 ## License
 
 MIT (code). Model weights carry their own licenses; see the table above.
