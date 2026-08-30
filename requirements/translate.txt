@@ -1,0 +1,18 @@
+# Translation without installing a separate app.
+#   pip install -r requirements/translate.txt
+#
+# Gives you the `hf` backend: dedicated English->Chinese models that download
+# themselves on first use. Pick the model in the 语音 panel.
+#
+#   Helsinki-NLP/opus-mt-en-zh   77M   instant, decent, the default
+#   facebook/nllb-200-1.3B      1.3B   slower, noticeably better
+#
+# For the best Chinese on academic prose you still want an instruct LLM via
+# Ollama (a separate install from https://ollama.com) — but try these first.
+
+transformers>=4.44
+sentencepiece
+sacremoses
+
+# The same transformers install also unlocks pronunciation scoring in flashcards
+# (facebook/wav2vec2-lv-60-espeak-cv-ft, ~1.2 GB, downloads on first use).

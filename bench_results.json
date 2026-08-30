@@ -1,0 +1,29 @@
+{
+  "n_documents": 4,
+  "tts_unit": "paragraph",
+  "parse": {
+    "documents": 4,
+    "paragraphs": 16,
+    "body_pct": 43.75,
+    "filtered_pct": 25.0,
+    "unmapped_per_10k_words": 0.0,
+    "parse_s_median": 0.0006558675000001291
+  },
+  "tts": {
+    "paragraphs": 4,
+    "rtf_median": 4070.462285584721,
+    "rtf_p90": 6454.482591348189,
+    "split_pct": 100.0,
+    "concat_pct": 0.0,
+    "estimate_pct": 0.0,
+    "boundary_shift_ms_median": 585.2124553525116,
+    "boundary_shift_ms_p90": 616.3636777994283,
+    "boundaries_compared": 7
+  },
+  "lookup": {
+    "available": false
+  },
+  "memory": {
+    "python_rss_gb": 0.07374191284179688
+  }
+}

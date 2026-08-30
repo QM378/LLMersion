@@ -1,0 +1,15 @@
+# Document conversation (talk/). Optional — the module runs without this file.
+#
+#   pip install -r requirements/talk.txt
+#
+# Speech recognition is the only new component. faster-whisper is the good
+# path: CTranslate2 int8, fastest and lightest. If you skip it the module uses
+# Whisper through the `transformers` install that requirements/translate.txt
+# already brings in, which costs no new dependency and is a little slower.
+#
+# Everything else the conversation needs is already here: Ollama for the tutor
+# (same model as writing feedback), Kokoro for its voice, wav2vec2 for the
+# pronunciation score — all borrowed from the running reader rather than
+# loaded a second time.
+
+faster-whisper>=1.0

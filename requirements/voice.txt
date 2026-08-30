@@ -1,0 +1,12 @@
+# Voices. Install torch FIRST, matching your CUDA — an RTX 5090 is sm_120 and
+# needs cu128 wheels, the default PyPI torch will not run on it:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+#   pip install -r requirements/voice.txt
+
+kokoro>=0.9.4          # the daily driver: Apache-2.0, fast, natural
+misaki[en]>=0.8        # Kokoro's English G2P
+
+# Optional extras — install only what you want, the app finds them:
+# chatterbox-tts       # voice cloning, most human-sounding, slowest
+# edge-tts             # Microsoft neural voices, online, zero setup
+# piper-tts            # tiny ONNX engine for weak hardware

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMersion-1 · PDF 跟读</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body data-theme="light">
+
+<header class="bar">
+  <div class="bar-left">
+    <span class="mark" aria-hidden="true"></span>
+    <h1 id="docTitle">LLMersion-1</h1>
+  </div>
+  <div class="bar-right">
+    <label class="file">
+      <input type="file" id="fileInput" accept=".pdf,.txt,.md,.markdown,.html,.htm,.epub" hidden>
+      打开文件
+    </label>
+    <button id="voiceBtn" class="ghost">语音 <span id="voiceNow" class="pill pill-wide">—</span></button>
+    <select id="speed" title="语速">
+      <option value="0.8">0.8×</option>
+      <option value="0.9">0.9×</option>
+      <option value="1" selected>1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.25">1.25×</option>
+      <option value="1.5">1.5×</option>
+    </select>
+    <select id="unit" title="合成粒度">
+      <option value="paragraph">整段朗读</option>
+      <option value="sentence">逐句朗读</option>
+    </select>
+    <button id="zhToggle" class="ghost" aria-pressed="true">中文</button>
+    <button id="vocabBtn" class="ghost">生词本 <span id="vocabCount" class="pill">0</span></button>
+    <button id="writeBtn" class="ghost">写作</button>
+    <button id="talkBtn" class="ghost" hidden>对话</button>
+    <button id="themeToggle" class="ghost" title="切换主题">◐</button>
+  </div>
+</header>
+
+<div id="status" class="status" role="status"></div>
+
+<main id="reader" class="reader">
+  <section class="empty" id="empty">
+    <h2>把一份英文文档拖进来</h2>
+    <p>按段落重排、逐句朗读、中文对照。选中任意单词即可查词并听发音。<br>支持 PDF、TXT、Markdown、HTML、EPUB。</p>
+    <ul class="keys">
+      <li><kbd>Space</kbd> 播放 / 暂停</li>
+      <li><kbd>←</kbd><kbd>→</kbd> 上一句 / 下一句</li>
+      <li><kbd>J</kbd><kbd>K</kbd> 上一段 / 下一段</li>
+      <li><kbd>T</kbd> 显示或隐藏中文</li>
+    </ul>
+  </section>
+</main>
+
+<div id="pop" class="pop" hidden>
+  <div class="pop-head">
+    <span id="popWord" class="pop-word"></span>
+    <span id="popPhon" class="pop-phon"></span>
+    <button id="popPlay" class="icon" title="朗读">▶</button>
+  </div>
+  <div id="popZh" class="pop-zh"></div>
+  <div id="popDef" class="pop-def"></div>
+  <div class="pop-foot">
+    <button id="popSave" class="ghost small">已收录 · 移除</button>
+    <span id="popSrc" class="pop-src"></span>
+  </div>
+</div>
+
+<section id="writePanel" class="panel" hidden>
+  <div class="panel-bar">
+    <h2>写作练习</h2>
+    <span class="panel-stat">读完一段，用英文复述或总结；本地 LLM 批改并检查你的生词是否用上了</span>
+    <div class="panel-actions"><button id="writeClose" class="ghost">关闭 Esc</button></div>
+  </div>
+  <div class="panel-body">
+    <textarea id="writeText" rows="7" placeholder="Retell what you just read, in your own English…"></textarea>
+    <div class="panel-row">
+      <button id="writeGo" class="primary">批改</button>
+      <span id="writeStatus" class="muted"></span>
+    </div>
+    <div id="writeOut" class="write-out" hidden></div>
+  </div>
+</section>
+
+<section id="voicePanel" class="panel" hidden>
+  <header class="panel-bar">
+    <h2>语音与模型</h2>
+    <span id="voiceStat" class="panel-stat"></span>
+    <div class="panel-actions">
+      <button id="rescanBtn" class="ghost small">重新扫描</button>
+      <button id="unloadBtn" class="ghost small">释放显存</button>
+      <button id="closeVoice" class="icon" title="关闭">✕</button>
+    </div>
+  </header>
+
+  <div class="panel-body">
+    <div class="ab">
+      <input id="abText" class="ab-input" placeholder="输入一句话用来对比试听">
+      <button id="abPlay" class="file">对比试听</button>
+      <span id="abStat" class="panel-stat"></span>
+    </div>
+    <div id="engineList" class="engine-list"></div>
+
+    <section class="mt-block">
+      <h3>翻译模型</h3>
+      <div id="mtList" class="mt-list"></div>
+    </section>
+  </div>
+</section>
+
+<section id="vocabPanel" class="panel" hidden>
+  <header class="panel-bar">
+    <h2>生词本</h2>
+    <span id="vocabStat" class="panel-stat"></span>
+    <div class="panel-actions">
+      <label class="chk"><input type="checkbox" id="onlyUnknown" checked> 只练未掌握</label>
+      <button id="mergeBtn" class="ghost small">合并去重</button>
+      <a id="exportBtn" class="ghost small" href="/api/vocab/export.csv" download>导出 CSV</a>
+      <button id="flashBtn" class="file">开始 Flash</button>
+      <button id="closeVocab" class="icon" title="关闭">✕</button>
+    </div>
+  </header>
+  <div id="vocabList" class="vocab-list"></div>
+</section>
+
+<div id="flash" class="flash" hidden>
+  <div class="flash-top">
+    <span id="flashCount" class="flash-count"></span>
+    <button id="flashClose" class="icon" title="退出">✕</button>
+  </div>
+  <div class="flash-card">
+    <div id="flashWord" class="flash-word"></div>
+    <div id="flashPhon" class="flash-phon"></div>
+    <div id="flashZh" class="flash-zh" hidden></div>
+    <div id="flashCtx" class="flash-ctx" hidden></div>
+    <div id="flashScore" class="flash-score" hidden>
+      <div class="score-row">
+        <span id="scoreNum" class="score-num">–</span>
+        <span id="scoreNote" class="score-note"></span>
+      </div>
+      <div id="scorePhon" class="score-phon"></div>
+    </div>
+  </div>
+  <div class="flash-hint">
+    <span><kbd>↑</kbd> 发音</span>
+    <span><kbd>↓</kbd> 看中文</span>
+    <span><kbd>R</kbd> <span id="recLabel">跟读评分</span></span>
+    <span><kbd>←</kbd> 上一个</span>
+    <span><kbd>→</kbd> 下一个</span>
+    <span><kbd>Enter</kbd> 认识</span>
+    <span><kbd>Space</kbd> 删除</span>
+    <span><kbd>Esc</kbd> 退出</span>
+  </div>
+  <div class="flash-rail"><div id="flashRail" class="flash-rail-fill"></div></div>
+</div>
+
+<footer class="transport" id="transport" hidden>
+  <button id="prevPara" class="icon" title="上一段">⏮</button>
+  <button id="prevSent" class="icon" title="上一句">◀</button>
+  <button id="play" class="icon play" title="播放 / 暂停">▶</button>
+  <button id="nextSent" class="icon" title="下一句">▶|</button>
+  <button id="nextPara" class="icon" title="下一段">⏭</button>
+  <div class="track" id="track" role="slider" aria-label="阅读进度" tabindex="0">
+    <div class="track-fill" id="trackFill"></div>
+    <div class="track-knob" id="trackKnob"></div>
+  </div>
+  <span class="counter" id="counter">0 / 0</span>
+</footer>
+
+<script src="/app.js"></script>
+
+<!-- Conversation practice. The panel is a self-contained widget in a shadow
+     tree, fetched only when the button is first pressed, so a reader that is
+     never used for speaking pays nothing for it. -->
+<script>
+(function () {
+  const btn = document.getElementById("talkBtn");
+  let panel = null, loading = false;
+
+  fetch("/api/talk-available")
+    .then((r) => r.json())
+    .then((d) => { if (d.available) btn.hidden = false; })
+    .catch(() => {});
+
+  function here() {
+    const u = S.units[P.idx];
+    return S.doc ? { doc_id: S.doc.doc_id, para: u ? u.pi : 0 } : null;
+  }
+
+  btn.onclick = async () => {
+    if (panel) { panel.toggle(); btn.setAttribute("aria-pressed", panel.visible()); return; }
+    if (loading) return;
+    loading = true;
+    btn.textContent = "对话 …";
+    try {
+      if (!window.mountTalkPanel) {
+        await new Promise((ok, no) => {
+          const t = document.createElement("script");
+          t.src = "/talk/panel.js";
+          t.onload = ok; t.onerror = () => no(new Error("load failed"));
+          document.head.appendChild(t);
+        });
+      }
+      panel = mountTalkPanel({
+        getContext: here,
+        // talking over the reader should stop the reader, not compete with it
+        pauseHost: () => { if (P.playing) pause(); },
+      });
+      btn.setAttribute("aria-pressed", "true");
+    } catch (e) {
+      say("对话模块加载失败", 4000);
+    }
+    btn.textContent = "对话";
+    loading = false;
+  };
+})();
+</script>
+</body>
+</html>

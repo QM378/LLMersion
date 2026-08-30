@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMersion-1 · 对话练习</title>
+<!-- Same faces as the reader, so the window looks identical once it is merged
+     in. If there is no network the browser falls back and nothing breaks. -->
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  html, body { height: 100%; margin: 0; background: #eaeef2; }
+  @media (prefers-color-scheme: dark) { html, body { background: #0f151c; } }
+  #shell { display: flex; flex-direction: column; height: 100%; }
+  #pop {
+    flex: none; display: flex; align-items: center; gap: 10px;
+    padding: 6px 10px; font: 12px/1.4 "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+    color: #5b6b7c;
+  }
+  #pop button {
+    font: inherit; padding: 3px 10px; border-radius: 6px; cursor: pointer;
+    border: 1px solid #d3dae1; background: #fdfdfc; color: #16202b;
+  }
+  #pop button:hover { background: #eaeef2; }
+  @media (prefers-color-scheme: dark) {
+    #pop { color: #97a6b5; }
+    #pop button { background: #161e27; color: #dbe3ec; border-color: #29343f; }
+  }
+  #mount { flex: 1; min-height: 0; }
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="pop">
+    <button id="popBtn">弹出为浮动窗口</button>
+    <span>弹出后摆在阅读器旁边。左边是老师和字幕，右边上面是你说的话、下面是纠正。</span>
+  </div>
+  <div id="mount"></div>
+</div>
+
+<script src="/talk/panel.js"></script>
+<script>
+  const floating = new URLSearchParams(location.search).has("float");
+  if (floating) document.getElementById("pop").remove();
+
+  mountTalkPanel({ host: document.getElementById("mount"), flat: true });
+
+  const btn = document.getElementById("popBtn");
+  if (btn) btn.onclick = () => {
+    window.open(location.pathname + "?float=1", "linguallm-talk",
+                "width=800,height=640,menubar=no,toolbar=no,location=no,status=no");
+  };
+</script>
+</body>
+</html>

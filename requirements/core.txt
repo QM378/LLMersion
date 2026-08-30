@@ -1,0 +1,12 @@
+# Core — the reader itself. Small, fast, no GPU needed.
+# blingfire is deliberately not here: it has no arm64 macOS wheel and a hard
+# requirement would abort the whole install. The setup scripts try it and
+# shrug it off; server/textseg.py falls back to its own splitter.
+#   pip install -r requirements/core.txt
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pymupdf>=1.24
+requests>=2.31
+numpy>=1.26
+soundfile>=0.12
