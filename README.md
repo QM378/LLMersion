@@ -58,6 +58,29 @@ re-encounter your saved vocabulary, rewrites them for read-aloud delivery,
 and leaves ordinary Markdown files for the reader to pick up. It is
 strictly decoupled: deleting it removes a convenience, never a capability.
 
+## Screenshots
+
+The reader with a document open: the spoken sentence is highlighted as the
+voice reads, and the Chinese rendering of the paragraph appears beneath it.
+The toolbar holds the voice, speed, reading mode, translation, vocabulary,
+writing, and conversation controls.
+
+![LLMersion-1 reader, read-along with paragraph translation](docs/images/llmersion/read-along.png)
+
+The voice and model panel lists every TTS engine with its install status,
+lets you compare voices on the same sentence, and frees GPU memory on demand.
+
+![LLMersion-1 voice and model panel](docs/images/llmersion/voices.png)
+
+| Conversation | Writing |
+|---|---|
+| ![LLMersion-1 conversation module, choosing a starting point](docs/images/llmersion/talk.png) | ![LLMersion-1 writing panel](docs/images/llmersion/writing.png) |
+
+The conversation module starts from free talk, a chosen topic, or the open
+document, and shows the saved words the tutor will try to use. The writing
+panel takes a retelling of what you just read and returns local LLM feedback,
+including a check of which saved words you used.
+
 ## Quick start
 
 Two commands on any platform. The first run downloads models (a few GB);
