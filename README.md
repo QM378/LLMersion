@@ -16,9 +16,9 @@ cost of electricity.
 LLMersion-1 is the open-source reference implementation of the
 **LLMersion scheme** described in the accompanying paper:
 
-> *LLMersion: An AI Agent Solution for Education, Ultra-Low-Cost Home
-> Language Acquisition toward Educational Equity, Grounded in a Survey of
-> Needs, Costs, and Hardware* (arXiv link: TODO after announcement)
+> [*LLMersion: A Local-First AI Agent Framework for Low-Cost Home Language
+> Learning toward Educational Equity*](https://arxiv.org/abs/2609.29672)
+> (arXiv:2609.29672)
 
 The scheme rests on four principles, and this codebase implements all of
 them: (P1) a web interface backed entirely by local, free, open-weight
@@ -148,7 +148,41 @@ findings of value.
 
 ## Citing
 
-Citation information will be added once the paper is posted to arXiv.
+If you use LLMersion-1 or LLMersion Narrator, please cite the paper:
+
+```bibtex
+@article{guo2026llmersion,
+  title={LLMersion: A Local-First AI Agent Framework for Low-Cost Home Language Learning toward Educational Equity},
+  author={Guo, Qiming and Tang, Jinwen and Huang, Xingran and Lin, Hung-Yu and Zhong, Yafu and Zhuang, Xiatian},
+  journal={arXiv preprint arXiv:2609.29672},
+  year={2026}
+}
+```
+
 ## License
 
 MIT (code). Model weights carry their own licenses; see the table above.
+
+## Companion project: LLMersion Narrator
+
+[LLMersion Narrator](https://github.com/QM378/llmersion-narrator) is an
+additional build that comes with the paper. It takes the listening part of
+LLMersion-1 (paragraph-level synthesis, sentence timing recovered from the
+voice's own pauses, and the read-along highlight) and turns it into a
+standalone tool whose results you can keep: paste English text, open a file,
+or open a whole folder, and get a narrated MP3, a read-along MP4 and a PDF
+for each, optionally repeated up to 20 times. It runs locally, and a Windows
+EXE that needs no Python is available on its
+[releases page](https://github.com/QM378/llmersion-narrator/releases).
+
+The Narrator page, with the paste, file and folder modes:
+
+![LLMersion Narrator, Paste text tab](docs/images/narrator/paste-text.png)
+
+| Open a file | Open a folder |
+|---|---|
+| ![LLMersion Narrator, Open a file tab](docs/images/narrator/open-file.png) | ![LLMersion Narrator, Open a folder tab](docs/images/narrator/open-folder.png) |
+
+A frame of the MP4 it produces (light style), with the spoken sentence highlighted:
+
+![A frame of a Narrator read-along video](docs/images/narrator/video-light.png)
